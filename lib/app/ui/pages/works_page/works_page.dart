@@ -177,7 +177,7 @@ class AppsMade extends StatelessWidget {
               Text('$title\n\n', style: const TextStyle(fontSize: 30)),
               const Text('Framework: Flutter\n'),
               Text('Description: $purpose\n'),
-              const Text('Tecnologies:'),
+              const Text('Implementations:'),
               ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
@@ -217,7 +217,7 @@ class AppsMade extends StatelessWidget {
             Text('$title\n\n', style: const TextStyle(fontSize: 30)),
             const Text('Framework: Flutter\n'),
             Text('Description: $purpose\n'),
-            const Text('Tecnologies:'),
+            const Text('Implementations:'),
             ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
