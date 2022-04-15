@@ -1,7 +1,3 @@
-
 import 'package:get/get.dart';
 
-class WorksController extends GetxController {
-
-}
-  
+class WorksController extends GetxController {}

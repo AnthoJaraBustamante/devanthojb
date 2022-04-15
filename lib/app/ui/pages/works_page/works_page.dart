@@ -1,34 +1,38 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:devanthojb/app/ui/global_widgets/adaptive_page_builder.dart';
+import 'package:devanthojb/app/controllers/home_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
-import '../../../controllers/works_controller.dart';
-
-class WorksPage extends GetView<WorksController> {
+class WorksPage extends StatelessWidget {
   const WorksPage({
     Key? key,
-    required this.type,
+    required this.isMobile,
   }) : super(key: key);
-  final DeviceTypeEnum type;
+  final bool isMobile;
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
+    Size size = MediaQuery.of(context).size;
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-      child: ListView.builder(
-        itemCount: buildWidgets(size, 0).length,
-        physics: const BouncingScrollPhysics(),
-        itemBuilder: (context, index) {
-          return buildWidgets(size, index)[index];
-        },
+      child: Scrollbar(
+        controller: HomeController.scrollController,
+        isAlwaysShown: true,
+        child: ListView.builder(
+          controller: HomeController.scrollController,
+          itemCount: buildWidgets(size, 0, isMobile).length,
+          physics: const BouncingScrollPhysics(),
+          itemBuilder: (context, index) {
+            return buildWidgets(size, index, isMobile)[index];
+          },
+        ),
       ),
     );
   }
 }
 
-List<Widget> buildWidgets(Size size, int index) => [
+List<Widget> buildWidgets(Size size, int index, bool isMobile) => [
       AppsMade(
+        isMobile: isMobile,
         size: size,
         index: index,
         title: 'Gas to You',
@@ -44,6 +48,7 @@ List<Widget> buildWidgets(Size size, int index) => [
         ],
       ),
       AppsMade(
+        isMobile: isMobile,
         size: size,
         index: index,
         title: 'Zurviz',
@@ -61,6 +66,7 @@ List<Widget> buildWidgets(Size size, int index) => [
         ],
       ),
       AppsMade(
+        isMobile: isMobile,
         size: size,
         index: index,
         title: 'Vetko',
@@ -74,6 +80,7 @@ List<Widget> buildWidgets(Size size, int index) => [
         ],
       ),
       AppsMade(
+        isMobile: isMobile,
         size: size,
         index: index,
         title: 'Auditoria App',
@@ -84,6 +91,7 @@ List<Widget> buildWidgets(Size size, int index) => [
         ],
       ),
       AppsMade(
+        isMobile: isMobile,
         size: size,
         index: index,
         title: 'Instadosis',
@@ -94,6 +102,7 @@ List<Widget> buildWidgets(Size size, int index) => [
         ],
       ),
       AppsMade(
+        isMobile: isMobile,
         size: size,
         index: index,
         title: 'Avanzame App',
@@ -102,6 +111,7 @@ List<Widget> buildWidgets(Size size, int index) => [
         technologies: const ['Google Maps and Markers', 'Geolocation'],
       ),
       AppsMade(
+        isMobile: isMobile,
         size: size,
         index: index,
         title: 'Grupo Colitas App',
@@ -113,6 +123,7 @@ List<Widget> buildWidgets(Size size, int index) => [
         ],
       ),
       AppsMade(
+        isMobile: isMobile,
         size: size,
         index: index,
         title: 'PatiPets',
@@ -135,6 +146,7 @@ class AppsMade extends StatelessWidget {
     required this.purpose,
     required this.image,
     required this.index,
+    required this.isMobile,
   }) : super(key: key);
 
   final Size size;
@@ -143,6 +155,7 @@ class AppsMade extends StatelessWidget {
   final String image;
   final List<String> technologies;
   final int index;
+  final bool isMobile;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -156,7 +169,7 @@ class AppsMade extends StatelessWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ...buildAppsOrder(index),
+                ...buildAppsOrder(index, isMobile),
               ],
             ),
           ],
@@ -165,70 +178,102 @@ class AppsMade extends StatelessWidget {
     );
   }
 
-  List<Widget> buildAppsOrder(int index) {
+  List<Widget> buildAppsOrder(int index, bool isMobile) {
+    final TextStyle style = TextStyle(fontSize: isMobile ? 20 : 30);
     if (index % 2 == 0) {
       return [
-        SizedBox(
-          width: size.width * 0.5,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text('$title\n\n', style: const TextStyle(fontSize: 30)),
-              const Text('Framework: Flutter\n'),
-              Text('Description: $purpose\n'),
-              const Text('Implementations:'),
-              ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: technologies.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return (Text(' • ${technologies[index]}'));
-                },
-              ),
-            ],
-          ),
-        ),
-        ZoomIn(
-            child: Material(
-          borderRadius: BorderRadius.circular(10),
-          clipBehavior: Clip.antiAlias,
-          elevation: 10,
-          child: Image.asset('assets/$image.jpg', width: size.width * 0.4),
-        )),
+        TextInfoApp(
+            isMobile: isMobile,
+            size: size,
+            title: title,
+            style: style,
+            purpose: purpose,
+            technologies: technologies),
+        ImageApp(image: image, size: size),
       ];
     }
     return [
-      ZoomIn(
-        child: Material(
-          borderRadius: BorderRadius.circular(10),
-          clipBehavior: Clip.antiAlias,
-          elevation: 10,
-          child: Image.asset('assets/$image.jpg', width: size.width * 0.4),
-        ),
-      ),
+      ImageApp(image: image, size: size),
       SizedBox(width: size.width * 0.1),
-      SizedBox(
-        width: size.width * 0.4,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text('$title\n\n', style: const TextStyle(fontSize: 30)),
-            const Text('Framework: Flutter\n'),
-            Text('Description: $purpose\n'),
-            const Text('Implementations:'),
-            ListView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: technologies.length,
-              itemBuilder: (BuildContext context, int index) {
-                return (Text(' • ${technologies[index]}'));
-              },
-            ),
-          ],
-        ),
-      ),
+      TextInfoApp(
+          isMobile: isMobile,
+          size: size,
+          title: title,
+          style: style,
+          purpose: purpose,
+          technologies: technologies),
     ];
+  }
+}
+
+class ImageApp extends StatelessWidget {
+  const ImageApp({
+    Key? key,
+    required this.image,
+    required this.size,
+  }) : super(key: key);
+
+  final String image;
+  final Size size;
+
+  @override
+  Widget build(BuildContext context) {
+    return ZoomIn(
+        child: Material(
+      borderRadius: BorderRadius.circular(10),
+      clipBehavior: Clip.antiAlias,
+      elevation: 10,
+      child: Image.asset('assets/$image.jpg', width: size.width * 0.3),
+    ));
+  }
+}
+
+class TextInfoApp extends StatelessWidget {
+  const TextInfoApp({
+    Key? key,
+    required this.size,
+    required this.title,
+    required this.style,
+    required this.purpose,
+    required this.technologies,
+    required this.isMobile,
+  }) : super(key: key);
+
+  final Size size;
+  final String title;
+  final TextStyle style;
+  final String purpose;
+  final List<String> technologies;
+  final bool isMobile;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: size.width * 0.5,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text('$title\n\n', style: TextStyle(fontSize: isMobile ? 30 : 40)),
+          Text('Framework: Flutter\n', style: style),
+          Text(
+            'Description: $purpose\n',
+            style: style,
+          ),
+          Text('Implementations:', style: style),
+          ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: technologies.length,
+            itemBuilder: (BuildContext context, int index) {
+              return (Text(
+                ' • ${technologies[index]}',
+                style: style,
+              ));
+            },
+          ),
+        ],
+      ),
+    );
   }
 }

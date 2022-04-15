@@ -1,7 +1,6 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:devanthojb/app/controllers/home_controller.dart';
-import 'package:devanthojb/app/ui/global_widgets/adaptive_page_builder.dart';
 import 'package:devanthojb/app/ui/global_widgets/global_button.dart';
 import 'package:devanthojb/app/ui/utils/tab_space.dart';
 import 'package:flutter/material.dart';
@@ -12,14 +11,14 @@ import '../../../controllers/about_controller.dart';
 class AboutPage extends GetView<AboutController> {
   const AboutPage({
     Key? key,
-    required this.type,
+    required this.isMobile,
   }) : super(key: key);
-  final DeviceTypeEnum type;
+  final bool isMobile;
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    bool isMobile = type == DeviceTypeEnum.mobile;
+
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       child: Container(
